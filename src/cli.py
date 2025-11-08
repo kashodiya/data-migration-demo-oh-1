@@ -260,6 +260,82 @@ def reset(ctx, confirm):
         raise click.ClickException(f"Reset failed: {e}")
 
 
+@cli.command('delete-tables')
+@click.option('--confirm', is_flag=True, 
+              help='Confirm deletion without interactive prompt')
+@click.pass_context
+def delete_tables(ctx, confirm):
+    """Delete all DynamoDB tables created by the migration tool"""
+    logger = ctx.obj['logger']
+    config_path = ctx.obj['config_path']
+    
+    try:
+        # Load configuration
+        if not os.path.exists(config_path):
+            raise click.ClickException(f"Configuration not found: {config_path}")
+        
+        config_manager = ConfigManager(config_path)
+        config = config_manager.load_config()
+        
+        # Get table names
+        table_names = []
+        for table_type, base_name in config['dynamodb_tables'].items():
+            full_name = config_manager.get_table_name(table_type, config)
+            table_names.append(full_name)
+        
+        # Show what will be deleted
+        click.echo(f"\n🗑️  The following {len(table_names)} DynamoDB tables will be deleted:")
+        for table_name in table_names:
+            click.echo(f"   • {table_name}")
+        click.echo(f"\nRegion: {config['aws_region']}")
+        
+        # Confirm deletion
+        if not confirm:
+            click.echo("\n⚠️  WARNING: This action cannot be undone!")
+            if not click.confirm("Are you sure you want to delete these tables?"):
+                click.echo("Deletion cancelled")
+                return
+        
+        # Import DynamoDB manager here to avoid circular imports
+        from dynamodb_manager import DynamoDBManager
+        
+        # Initialize DynamoDB manager
+        dynamodb_manager = DynamoDBManager(config, logger)
+        
+        click.echo(f"\n🗑️  Deleting {len(table_names)} DynamoDB tables...")
+        
+        # Delete each table
+        deleted_count = 0
+        for table_name in table_names:
+            click.echo(f"   Deleting: {table_name}")
+            try:
+                if dynamodb_manager.delete_table(table_name):
+                    click.echo(f"   ✅ {table_name} deleted successfully")
+                    deleted_count += 1
+                    logger.info(f"Deleted DynamoDB table: {table_name}")
+                else:
+                    click.echo(f"   ⚠️  {table_name} may not exist or failed to delete")
+                    logger.warning(f"Failed to delete table or table doesn't exist: {table_name}")
+            except Exception as table_error:
+                click.echo(f"   ❌ Failed to delete {table_name}: {table_error}")
+                logger.error(f"Error deleting table {table_name}: {table_error}")
+        
+        # Summary
+        if deleted_count == len(table_names):
+            click.echo(f"\n🎉 Successfully deleted all {deleted_count} tables")
+            logger.info(f"Successfully deleted all {deleted_count} DynamoDB tables")
+        elif deleted_count > 0:
+            click.echo(f"\n⚠️  Deleted {deleted_count}/{len(table_names)} tables")
+            logger.warning(f"Partially successful: deleted {deleted_count}/{len(table_names)} tables")
+        else:
+            click.echo(f"\n❌ No tables were deleted")
+            logger.error("No tables were deleted")
+            
+    except Exception as e:
+        logger.error(f"Delete tables failed: {e}")
+        raise click.ClickException(f"Delete tables failed: {e}")
+
+
 @cli.command()
 @click.pass_context
 def info(ctx):
