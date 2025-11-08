@@ -1,0 +1,70 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Migration tool specific
+config/migration.json
+state/
+logs/
+*.log
+
+# Test files
+test_config.json
+demo_config.json
+
+# AWS credentials (should never be committed)
+.aws/
+credentials
+config
+
+# Database files (except sample)
+*.db
+*.sqlite
+!data/Chinook_Sqlite.sqlite
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Documentation builds
+docs/_build/
+docs/schema_analysis.json
+

@@ -1,0 +1,13 @@
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 - Info message
+2025-11-08 22:37:19 - migration - [33mWARNING[0m - warning:107 - Warning message
+2025-11-08 22:37:19 - migration - [31mERROR[0m - error:111 - Error message
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 - 🚀 Starting migration test-123
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    Source: test.db
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    Total records: 1,000
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 - 📊 Starting table migration: TestTable (100 records)
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    TestTable: 50/100 (50.0%) - batch size: 25
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 - ✅ Table TestTable completed in 2.50s (40.0 records/sec)
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 - ✅ Migration test-123 completed successfully
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    Duration: 10.00 seconds
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    Records migrated: 1,000
+2025-11-08 22:37:19 - migration - [32mINFO[0m - info:103 -    Rate: 100.0 records/second
